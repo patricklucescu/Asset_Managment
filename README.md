@@ -7,10 +7,10 @@ There are several variables that can be changed:
 - risk aversion coefficient
 - future, taps(no idea what these are)
 - number of epochs(currently 10)
-2. In the LSTM file:
-- batch_size ( currently 40)
-- iterations (currently 500)
-- RNN_HIDDEN ( number of hidden layers)
+- could also include a rolling window for the optimization procedure
+2. In the HMM file:
+-
+-
 
 
 
