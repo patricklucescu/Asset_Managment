@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn import covariance as cv
 import LSTM as ls
+import HMM as hmm
 
 
 def read_batch_multi(X, batch_size, future=10, nr_taps=2, batch_start=0):
