@@ -9,8 +9,9 @@ There are several variables that can be changed:
 - number of epochs(currently 10)
 - could also include a rolling window for the optimization procedure
 2. In the HMM file:
--
--
+- K
+- iter
+- p
 
 
 
