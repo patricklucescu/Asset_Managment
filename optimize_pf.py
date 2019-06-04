@@ -45,14 +45,25 @@ def RNNLSTM(X):
 
     return out[0].ravel()
 
+def HMM(X):
+    K = 4
+    p = .1
+    iter = 40
+    posteriori_prob, mu_s, cov_s, pred = hmm.expectation_maximization(X, K, iter, p)
 
-def optimize(x, ra):
+    return pred
+
+def optimize(x, ra, method=None):
 
     ret = x.mean().fillna(0).values
 
     cov = ra * pd.DataFrame(data=cv.oas(x)[0],index=x.columns, columns=x.columns).fillna(0)
+    
+    if method is 'HMM':
+        ret = HMM(x)
 
-    ret = RNNLSTM(x)
+    if method is 'LSTM_Multi':
+        ret = RNNLSTM(x)
 
     problem = osqp.OSQP()
     k = len(ret)
@@ -81,6 +92,7 @@ def optimize(x, ra):
 if __name__ == '__main__':
 
     # load data ###################################################################
+    method = 'HMM'
     risk_aversion = 1 # I assume is for the Mean Variance Optimization
     window = 150 # after how many weeks do you want to rebalance
 
@@ -103,7 +115,7 @@ if __name__ == '__main__':
 
         if today in rebalancing_dates:  # re-optimize and get new weights
             print(today)
-            weights.loc[today, :] = optimize(returns, risk_aversion)
+            weights.loc[today, :] = optimize(returns, risk_aversion, method)
         else:  # no re-optimization, re-balance the weights
             weights.loc[today, :] = weights.loc[last, :] * (1 + returns.loc[today, :]) \
                                     / (1 + (weights.loc[last, :] * returns.loc[today, :]).sum())
