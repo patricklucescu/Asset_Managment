@@ -81,8 +81,8 @@ def optimize(x, ra):
 if __name__ == '__main__':
 
     # load data ###################################################################
-    risk_aversion = 1
-    window = 150
+    risk_aversion = 1 # I assume is for the Mean Variance Optimization
+    window = 150 # after how many weeks do you want to rebalance
 
     # set dates (and freq)
     dtindex = pd.bdate_range('2000-06-16', '2018-12-09', weekmask='Fri', freq='C')
