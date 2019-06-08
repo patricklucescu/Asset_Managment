@@ -1,6 +1,5 @@
 import os
 import pandas as pd
-from scipy import sparse
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn import covariance as cv
@@ -11,10 +10,10 @@ if __name__ == '__main__':
     # SET PARAMETERS
     risk_aversion = 1
     window = 150
-    HMM_parameters = [[2,0.1,50],[3,0.1,50],[4,0.1,50],[5,0.1,50]]
+    HMM_parameters = [[2,0.1,50]]
 
     # set dates (and freq)
-    dtindex = pd.bdate_range('2000-06-16', '2018-12-09', weekmask='Fri', freq='C')
+    dtindex = pd.bdate_range('1993-01-01', '2002-12-31', weekmask='Fri', freq='C')
     rebalancing_period = window
     rebalancing_dates = dtindex[window - 1::rebalancing_period]
     df = pd.read_csv('asset_returns.csv', delimiter=',')
@@ -27,9 +26,8 @@ if __name__ == '__main__':
     # Set Error Vector
     error = []
 
-
     for parameters in HMM_parameters:
-        max_er = 0
+        er_df = pd.DataFrame(columns=df.columns)
         K = parameters[0]
         p = parameters[1]
         iter = parameters[2]
@@ -42,11 +40,10 @@ if __name__ == '__main__':
             if today in rebalancing_dates:
                 print(today)
                 posteriori_prob, mu_s, cov_s, pred_ret = hmm.expectation_maximization(returns, K, iter, p)
-                actual_ret = input_returns.loc[today+1, :] ## Modify
+                actual_ret = input_returns.loc[today+1, :]  # Modify
                 actual_ret = actual_ret.values
-                maxx = np.max(abs(pred_ret-actual_ret))
-                max_er = np.max([maxx,max_er])
-        error.append(max_er)
+                abs_error = np.max(abs(pred_ret-actual_ret))
+                er_df.append(abs_error)
 
 
 
