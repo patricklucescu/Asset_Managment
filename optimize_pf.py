@@ -56,17 +56,19 @@ if __name__ == '__main__':
     window = 150 # after how many weeks do you want to rebalance
 
     # set dates (and freq)
-    dtindex = pd.bdate_range('2000-06-16', '2018-12-09', weekmask='Fri', freq='C')
+    dtindex = pd.bdate_range('1993-01-01', '2018-12-09', weekmask='Fri', freq='C')
     rebalancing_period = window
     rebalancing_dates = dtindex[window-1::rebalancing_period]
-    df = pd.read_csv('asset_returns.csv', delimiter=',')
+    df = pd.read_csv('markets_new.csv', delimiter=',')
     df0 = pd.DataFrame(data=df.values, columns=df.columns, index=pd.to_datetime(df['Date']))
     df0 = df0.reindex(dtindex)
-    df0 = df0.drop(columns = ['Date'])
+    df0 = df0.drop(columns=['Date'])
 
     input_returns = df0.pct_change().fillna(0)
     input_returns = input_returns.iloc[1:, :]
     weights = pd.DataFrame(data=np.nan, columns=input_returns.columns, index=input_returns.index)
+    num_assets = len(input_returns.columns)
+    assets = input_returns.columns
     for date in dtindex[window - 1:]:
         today = date
         returns = input_returns.loc[:today, :] #.tail(window)
@@ -74,7 +76,14 @@ if __name__ == '__main__':
 
         if today in rebalancing_dates:  # re-optimize and get new weights
             print(today)
-            weights.loc[today, :] = optimize(returns, risk_aversion)
+            available_assets =[]
+            today_prices = list(df0.loc[today].values)
+            for i in range(0,num_assets):
+                if today_prices[i] > 0:
+                    available_assets.append(str(i+1))
+            returns = input_returns.loc[:today, available_assets]
+            weights.loc[today, :] = [0] * 14
+            weights.loc[today, available_assets] = optimize(returns, risk_aversion)
         else:  # no re-optimization, re-balance the weights
             weights.loc[today, :] = weights.loc[last, :] * (1 + returns.loc[today, :]) \
                                     / (1 + (weights.loc[last, :] * returns.loc[today, :]).sum())
