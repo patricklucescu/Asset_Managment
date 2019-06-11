@@ -11,9 +11,9 @@ if __name__ == '__main__':
     end_date = '2002-12-31'
     risk_aversion = 1
     rebalancing_period = 52
-    rolling_window = False
-    asset_removal = True
-    HMM_parameters = [[2, 0.1, 20],[3, 0.1, 20],[4, 0.1, 20],[5, 0.1, 20],[6, 0.1, 20],[7, 0.1, 20],[8, 0.1, 20],[9, 0.1, 20]]
+    rolling_window = False  # Incoroprate rolling window
+    asset_removal = True  # Remove unwantedassets from the start
+    HMM_parameters = [[2, 0.1, 20],[3, 0.1, 20],[4, 0.1, 20],[5, 0.1, 20],[6, 0.1, 20],[7, 0.1, 20],[8, 0.1, 20],[9, 0.1, 20]]  # [K, p, interations]
 
     # Data Processing
     dtindex = pd.bdate_range(begin_date, end_date, weekmask='Fri', freq='C')
