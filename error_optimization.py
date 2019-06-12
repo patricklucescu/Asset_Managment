@@ -13,7 +13,7 @@ if __name__ == '__main__':
     rebalancing_period = 52
     rolling_window = False  # Incoroprate rolling window
     asset_removal = True  # Remove unwantedassets from the start
-    HMM_parameters = [[2, 0.1, 20]]  # [K, p, interations]
+    HMM_parameters = [[2, 0.1, 20], [3, 0.1, 20]]  # [K, p, interations]
 
     # Data Processing
     dtindex = pd.bdate_range(begin_date, end_date, weekmask='Fri', freq='C')
@@ -23,7 +23,6 @@ if __name__ == '__main__':
     # Returns Processing
     input_returns = df0.pct_change().fillna(0)
     input_returns = input_returns.iloc[1:, :]
-    num_assets = len(input_returns.columns)
     rebalancing_dates = dtindex[rebalancing_period - 1::rebalancing_period]
 
     # Set Vectors for Errors
@@ -62,7 +61,7 @@ if __name__ == '__main__':
         sign.append(correct_sign/counter)
 
 
-## Ignore this: Just here to print it nicely
+# Ignore this: Just here to print it nicely
 iteration = [1,5,10,15,20,25,30,35,40,45,50]
 k=[2,3,4,5,6,7,8,9]
 plt.figure(figsize=(8,6))

@@ -17,6 +17,7 @@ def database_processing(df, dtindex,asset_removal):
     else:
         return df0
 
+
 def returns_cleaning(input_returns, df, rolling_window, today):
     """ If rolling window is available, remove assets that do not have enough observations
      If not, just remove assets that do not have at least one return available"""
