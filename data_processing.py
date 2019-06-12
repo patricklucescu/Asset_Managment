@@ -23,19 +23,21 @@ def returns_cleaning(input_returns, df, rolling_window, today):
      If not, just remove assets that do not have at least one return available"""
     available_assets = []
     if rolling_window:
-        for asset in input_returns.columns[1:]:
+        for asset in input_returns.columns:
             if all(df.loc[today - rolling_window:today][asset] > 0):
                 available_assets.append(asset)
         returns = input_returns.loc[today - rolling_window:today, available_assets]
 
     else:
-        for asset in input_returns.columns[1:]:
+        for asset in input_returns.columns:
             if df.loc[today][asset] > 0 and df.loc[today - 1][asset] > 0:
                 available_assets.append(asset)
         returns = input_returns.loc[:today, available_assets]
     return returns, available_assets
 
 
+#def cluster_corr_matrix(CorrMatrix):
+  #  m,n = np.shape(CorrMatrix)
 
 
 
