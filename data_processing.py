@@ -10,7 +10,7 @@ def database_processing(df, dtindex,asset_removal):
     df0 = df0.drop(columns=['Date'])
 
     if asset_removal:
-        for asset in df.columns[1:]:
+        for asset in df0.columns:
             if pd.isna(df0.loc[dtindex[0]][asset]):
                 df0 = df0.drop(columns=[asset])
         return df0
