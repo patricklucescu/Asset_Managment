@@ -13,7 +13,7 @@ if __name__ == '__main__':
     rebalancing_period = 52
     rolling_window = False  # Incoroprate rolling window
     asset_removal = True  # Remove unwantedassets from the start
-    HMM_parameters = [[2, 0.1, 20],[3, 0.1, 20],[4, 0.1, 20],[5, 0.1, 20],[6, 0.1, 20],[7, 0.1, 20],[8, 0.1, 20],[9, 0.1, 20],[10, 0.1, 20]]  # [K, p, interations]
+    HMM_parameters = [[1, 0.1, 20],[2, 0.1, 20],[3, 0.05, 20],[4, 0.1, 50],[5, 0.1, 50],[6, 0.1, 50],[7, 0.1, 50],[8, 0.1, 50]]  # [K, p, interations]
 
     # Data Processing
     dtindex = pd.bdate_range(begin_date, end_date, weekmask='Fri', freq='C')
@@ -63,22 +63,23 @@ if __name__ == '__main__':
 
 # Ignore this: Just here to print it nicely
 iteration = [1,5,10,15,20,25,30,35,40,45,50]
-k=[2,3,4,5,6,7,8,9,10]
+k=[2,3,4,5,6,7]
 plt.figure(figsize=(8,6))
-plt.plot(k,mean_error,'bo')
+plt.plot(k,mean_error,color="darkorchid", marker='o')
 plt.xlabel("K")
 plt.ylabel("Mean absolute error")
-plt.savefig("kmean_abs_er.png",bbox_inches='tight')
+plt.savefig("kmean_abs_er.png",dpi=400, facecolor='aliceblue', edgecolor='k',bbox_inches='tight')
 
 plt.figure(figsize=(8,6))
-plt.plot(k, sign,'bo')
+plt.plot(k, sign,color="darkorchid", marker='o')
 plt.ylabel("Sign prediction accuracy")
 plt.xlabel("K")
-plt.savefig("ksign_accuracy.png",bbox_inches='tight')
+plt.savefig("ksign_accuracy.png",dpi=400, facecolor='aliceblue', edgecolor='k',bbox_inches='tight')
 
 
 plt.figure(figsize=(8,6))
-plt.plot(k,max_error,'bo')
+plt.plot(k,max_error,color="darkorchid", marker='o')
 plt.xlabel("K")
 plt.ylabel("Maximum absolute error")
-plt.savefig("kmax_abs_er.png",bbox_inches='tight')
+plt.show()
+plt.savefig("kmax_abs_er.png",dpi=400, facecolor='aliceblue', edgecolor='k',bbox_inches='tight')
