@@ -64,20 +64,20 @@ if __name__ == '__main__':
 # Ignore this: Just here to print it nicely
 iteration = [1,5,10,15,20,25,30,35,40,45,50]
 k=[2,3,4,5,6,7]
-plt.figure(figsize=(8,6))
+plt.figure(figsize=(10,7.5))
 plt.plot(k,mean_error,color="darkorchid", marker='o')
 plt.xlabel("K")
 plt.ylabel("Mean absolute error")
 plt.savefig("kmean_abs_er.png",dpi=400, facecolor='aliceblue', edgecolor='k',bbox_inches='tight')
 
-plt.figure(figsize=(8,6))
+plt.figure(figsize=(10,7.5))
 plt.plot(k, sign,color="darkorchid", marker='o')
 plt.ylabel("Sign prediction accuracy")
 plt.xlabel("K")
 plt.savefig("ksign_accuracy.png",dpi=400, facecolor='aliceblue', edgecolor='k',bbox_inches='tight')
 
 
-plt.figure(figsize=(8,6))
+plt.figure(figsize=(10,7.5))
 plt.plot(k,max_error,color="darkorchid", marker='o')
 plt.xlabel("K")
 plt.ylabel("Maximum absolute error")
