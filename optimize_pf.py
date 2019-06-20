@@ -10,11 +10,11 @@ if __name__ == '__main__':
     begin_date = '1993-01-01'
     end_date = '2002-12-31'
     risk_aversion = 1
-    rebalancing_period = 104
+    rebalancing_period = 26
     rolling_window = False  # Incorporate rolling window
     asset_removal = True  # Remove unwanted assets from the start
-    HMM_parameters = [2, 0.1, 20]
-    tCost = 0.004
+    HMM_parameters = [7, 0.1, 20]
+    tCost = 0.002
 
     # Data Processing
     dtindex = pd.bdate_range(begin_date, end_date, weekmask='Fri', freq='C')
@@ -65,10 +65,9 @@ if __name__ == '__main__':
     total_return_TC = list(total_return_TC)[0]
     total_return_TC = pd.Series(total_return_TC, index=dates_index)
 
-    # Remove non tradable dates
+    # Remove non tradeble dates
     total_return_noTC = total_return_noTC[dtindex[rebalancing_period:]]
     total_return_TC = total_return_TC[dtindex[rebalancing_period:]]
-
 
     cum_returns_noTC = np.cumprod(1+total_return_noTC)
     cum_returns_TC = np.cumprod(1 + total_return_TC)

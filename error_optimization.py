@@ -3,17 +3,21 @@ import numpy as np
 import matplotlib.pyplot as plt
 from HMM import expectation_maximization
 import data_processing as dp
+from matplotlib.ticker import PercentFormatter
+
 
 if __name__ == '__main__':
 
     # SET PARAMETERS
     begin_date = '1993-01-01'
     end_date = '2002-12-31'
-    risk_aversion = 1
-    rebalancing_period = 52
-    rolling_window = False  # Incoroprate rolling window
-    asset_removal = True  # Remove unwantedassets from the start
-    HMM_parameters = [[1, 0.1, 20],[2, 0.1, 20],[3, 0.05, 20],[4, 0.1, 50],[5, 0.1, 50],[6, 0.1, 50],[7, 0.1, 50],[8, 0.1, 50]]  # [K, p, interations]
+    rebalancing_period = 13
+    rolling_window = False  # Incorporate rolling window
+    asset_removal = True  # Remove unwanted assets from the start
+    a = np.linspace(0, 1, 51)
+    HMM_parameters =[]
+    for x in a:
+        HMM_parameters.append([2,x,20])
 
     # Data Processing
     dtindex = pd.bdate_range(begin_date, end_date, weekmask='Fri', freq='C')
@@ -60,26 +64,29 @@ if __name__ == '__main__':
         mean_error.append(error_value/counter)
         sign.append(correct_sign/counter)
 
+    # Plotting
+    iteration = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
+    k=[1,2,3,4,5,6,7,8,9,10]
+    plt.figure(figsize=(10, 7.5))
+    plt.scatter(a, mean_error, color="darkorchid", marker='o', s=60)
+    plt.xlabel("p")
+    plt.ylabel("Mean absolute error")
+    plt.gca().yaxis.set_major_formatter(PercentFormatter(1))
+    plt.savefig("pmean_abs_er.png", dpi=400, facecolor='aliceblue', edgecolor='k', bbox_inches='tight')
+    plt.close()
 
-# Ignore this: Just here to print it nicely
-iteration = [1,5,10,15,20,25,30,35,40,45,50]
-k=[2,3,4,5,6,7]
-plt.figure(figsize=(10,7.5))
-plt.plot(k,mean_error,color="darkorchid", marker='o')
-plt.xlabel("K")
-plt.ylabel("Mean absolute error")
-plt.savefig("kmean_abs_er.png",dpi=400, facecolor='aliceblue', edgecolor='k',bbox_inches='tight')
+    plt.figure(figsize=(10, 7.5))
+    plt.scatter(a, sign, color="darkorchid", marker='o', s=60)
+    plt.ylabel("Sign accuracy")
+    plt.xlabel("p")
+    plt.gca().yaxis.set_major_formatter(PercentFormatter(1))
+    plt.savefig("psign_accuracy.png", dpi=400, facecolor='aliceblue', edgecolor='k', bbox_inches='tight')
+    plt.close()
 
-plt.figure(figsize=(10,7.5))
-plt.plot(k, sign,color="darkorchid", marker='o')
-plt.ylabel("Sign prediction accuracy")
-plt.xlabel("K")
-plt.savefig("ksign_accuracy.png",dpi=400, facecolor='aliceblue', edgecolor='k',bbox_inches='tight')
-
-
-plt.figure(figsize=(10,7.5))
-plt.plot(k,max_error,color="darkorchid", marker='o')
-plt.xlabel("K")
-plt.ylabel("Maximum absolute error")
-plt.show()
-plt.savefig("kmax_abs_er.png",dpi=400, facecolor='aliceblue', edgecolor='k',bbox_inches='tight')
+    plt.figure(figsize=(10, 7.5))
+    plt.scatter(a, max_error, color="darkorchid", marker='o', s=60)
+    plt.xlabel("p")
+    plt.ylabel("Maximum absolute error")
+    plt.gca().yaxis.set_major_formatter(PercentFormatter(1))
+    plt.savefig("pmax_abs_er.png", dpi=400, facecolor='aliceblue', edgecolor='k', bbox_inches='tight')
+    plt.close()
