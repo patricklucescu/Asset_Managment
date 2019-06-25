@@ -9,8 +9,17 @@ import osqp
 def optimize(returns, risk_aversion, parameters):
     K, p, iterations = parameters[0], parameters[1], parameters[2]
 
+
+
     # Predict the returns
     posteriori_prob, mu_s, cov_s, predicted_return = expectation_maximization(returns, K, iterations, p)
+
+    # UNCOMMENT THIS IF YOU WANT TO INVEST IN TOP nLongs ASSETS WITH HIGHEST PREDICTED RETURNS
+    # nLongs = 3
+    # idx = (-predicted_return).argsort()[:nLongs]
+    # weights = [0] * predicted_return
+    # weights[idx] = 1 / nLongs
+    # return weights
 
     cov = risk_aversion * pd.DataFrame(data=cv.oas(returns)[0],index=returns.columns, columns=returns.columns).fillna(0)
     problem = osqp.OSQP()

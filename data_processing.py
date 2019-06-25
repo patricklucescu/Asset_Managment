@@ -1,11 +1,10 @@
-import os
 import pandas as pd
-import numpy as np
 
 
 def database_processing(df, dtindex,asset_removal):
     """ Reindex dataset by dtindex and clean the dataset of unwanted assets(if asset_removal is true)"""
-    df0 = pd.DataFrame(data=df.values, columns=df.columns, index=pd.to_datetime(df['Date'], format='%d/%m/%Y'))
+    # Change format to '%d/%m/%Y' depending on which dataset you are using
+    df0 = pd.DataFrame(data=df.values, columns=df.columns, index=pd.to_datetime(df['Date'], format='%Y-%m-%d'))
     df0 = df0.reindex(dtindex)
     df0 = df0.drop(columns=['Date'])
 
@@ -35,9 +34,6 @@ def returns_cleaning(input_returns, df, rolling_window, today):
         returns = input_returns.loc[:today, available_assets]
     return returns, available_assets
 
-
-#def cluster_corr_matrix(CorrMatrix):
-  #  m,n = np.shape(CorrMatrix)
 
 
 

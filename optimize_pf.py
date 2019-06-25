@@ -7,19 +7,23 @@ import data_processing as dp
 
 if __name__ == '__main__':
     # Set Parameters
-    begin_date = '1993-01-01'
-    end_date = '2002-12-31'
-    risk_aversion = 1
-    rebalancing_period = 26
+    begin_date = '2003-01-01'
+    end_date = '2019-03-04'
+    risk_aversion = 4
+    rebalancing_period = 13
     rolling_window = False  # Incorporate rolling window
     asset_removal = True  # Remove unwanted assets from the start
-    HMM_parameters = [7, 0.1, 20]
+    HMM_parameters = [2, 0.1, 20]
     tCost = 0.002
 
     # Data Processing
     dtindex = pd.bdate_range(begin_date, end_date, weekmask='Fri', freq='C')
-    df = pd.read_csv('markets_new.csv', delimiter=',')
+    df = pd.read_csv('asset_returns.csv', delimiter=',')
+    # df = pd.read_csv('markets_new.csv', delimiter=',')
     df0 = dp.database_processing(df, dtindex, asset_removal)
+
+    a = df0[['SPX','US 10Y']]
+    df0 = a
 
     # Returns Processing
     input_returns = df0.pct_change().fillna(0)
@@ -55,7 +59,7 @@ if __name__ == '__main__':
             weights.loc[today, :] = weights.loc[last, :] * (1 + all_assets_returns.loc[today, :]) \
                                     / (1 + (weights.loc[last, :] * all_assets_returns.loc[today, :]).sum())
             turnover.loc[today] = sum(abs(weights.loc[today]-weights.loc[last, :] * (1 + all_assets_returns.loc[today, :]) \
-                                    / (1 + (weights.loc[last, :] * all_assets_returns.loc[today, :]).sum()))) # it's just zero
+                                    / (1 + (weights.loc[last, :] * all_assets_returns.loc[today, :]).sum())))  # it's just zero
 
     # Create TC and No TC total returns series
     turnover = turnover.fillna(0)
@@ -83,24 +87,48 @@ if __name__ == '__main__':
     av_turnover = 100 * turnover_counter / len(rebalancing_dates)
     StdReturns_annually = 100*StdReturns_weekly * np.sqrt(annualizationFactor)
 
-
+    # Plotting
     plt.figure(figsize=(10,7.5))
     plt.plot(cum_returns_noTC, color="darkorchid", linewidth=2)
     plt.plot(cum_returns_TC, color='limegreen', linestyle='--', linewidth=2)
     plt.title('Geometric Sharpe : {:.3f}'.format(SR_geometric))
-    plt.ylabel("Cumulative Returns")
-    plt.savefig("annually.png", dpi=400, facecolor='aliceblue', edgecolor='k',bbox_inches='tight')
+    plt.ylabel("Portfolio value")
+    plt.show()
+    plt.savefig("new_data.png", dpi=400, facecolor='aliceblue', edgecolor='k',bbox_inches='tight')
     plt.close()
 
-
-
-
-
-
-    plt.figure
+    plt.figure()
     df0.pct_change().cumsum().plot()
-
-    plt.figure
+    plt.show()
+    plt.figure()
     weights.plot()
+    plt.show()
 
+    cum_spx = np.cumprod(1+input_returns['SPX'])
+    cum_euro = np.cumprod(1+input_returns['Eurostoxx'])
+    cum_ftse = np.cumprod(1+input_returns['FTSE'])
+    cum_nik = np.cumprod(1+input_returns['Nikkei'])
+
+    plt.figure(figsize=(10, 7.5))
+    plt.plot(cum_returns_noTC, color="darkorchid", linewidth=2)
+    plt.plot(cum_returns_TC, color='limegreen', linestyle='--', linewidth=2)
+    plt.plot(cum_spx, color="royalblue", linewidth=2)
+    plt.plot(cum_nik, color="darkorange", linewidth=2)
+    plt.title('Geometric Sharpe : {:.3f}'.format(SR_geometric))
+    plt.ylabel("Portfolio value")
+    plt.show()
+
+    av_weights = weights[12:]
+    av_weights = av_weights.sum(0) / len(av_weights)
+
+    plt.figure()
+    plt.plot(a)
+    plt.plot(pf)
+    plt.show()
+
+    plt.figure(figsize=(10, 7.5))
+    plt.plot(np.cumprod(1+the_strategy),color="darkorchid", linewidth=2)
+    plt.plot(np.cumprod(1+total_return_noTC),color="royalblue")
+    plt.ylabel("Portfolio value")
+    plt.savefig("equal.png", dpi=400, facecolor='aliceblue', edgecolor='k', bbox_inches='tight')
     plt.show()

@@ -11,14 +11,11 @@ if __name__ == '__main__':
     # SET PARAMETERS
     begin_date = '1993-01-01'
     end_date = '2002-12-31'
-    rebalancing_period = 13
+    rebalancing_period = 52
     rolling_window = False  # Incorporate rolling window
     asset_removal = True  # Remove unwanted assets from the start
-    a = np.linspace(0, 1, 51)
-    HMM_parameters =[]
-    for x in a:
-        HMM_parameters.append([2,x,20])
-
+    HMM_parameters = [[1, 0.1, 20], [2, 0.1, 20], [3, 0.1, 20], [4, 0.1, 20], [5, 0.1, 20],
+                      [6, 0.1, 20], [7, 0.1, 20], [8, 0.1, 20], [9, 0.1, 20], [10, 0.1, 20]]
     # Data Processing
     dtindex = pd.bdate_range(begin_date, end_date, weekmask='Fri', freq='C')
     df = pd.read_csv('markets_new.csv', delimiter=',')
@@ -66,27 +63,27 @@ if __name__ == '__main__':
 
     # Plotting
     iteration = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
-    k=[1,2,3,4,5,6,7,8,9,10]
+    k = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     plt.figure(figsize=(10, 7.5))
-    plt.scatter(a, mean_error, color="darkorchid", marker='o', s=60)
-    plt.xlabel("p")
+    plt.scatter(k, mean_error, color="darkorchid", marker='o', s=60)
+    plt.xlabel("K")
     plt.ylabel("Mean absolute error")
     plt.gca().yaxis.set_major_formatter(PercentFormatter(1))
-    plt.savefig("pmean_abs_er.png", dpi=400, facecolor='aliceblue', edgecolor='k', bbox_inches='tight')
+    plt.savefig("kmean_abs_er.png", dpi=400, facecolor='aliceblue', edgecolor='k', bbox_inches='tight')
     plt.close()
 
     plt.figure(figsize=(10, 7.5))
-    plt.scatter(a, sign, color="darkorchid", marker='o', s=60)
+    plt.scatter(k, sign, color="darkorchid", marker='o', s=60)
     plt.ylabel("Sign accuracy")
-    plt.xlabel("p")
+    plt.xlabel("K")
     plt.gca().yaxis.set_major_formatter(PercentFormatter(1))
-    plt.savefig("psign_accuracy.png", dpi=400, facecolor='aliceblue', edgecolor='k', bbox_inches='tight')
+    plt.savefig("ksign_accuracy.png", dpi=400, facecolor='aliceblue', edgecolor='k', bbox_inches='tight')
     plt.close()
 
     plt.figure(figsize=(10, 7.5))
-    plt.scatter(a, max_error, color="darkorchid", marker='o', s=60)
-    plt.xlabel("p")
+    plt.scatter(k, max_error, color="darkorchid", marker='o', s=60)
+    plt.xlabel("K")
     plt.ylabel("Maximum absolute error")
     plt.gca().yaxis.set_major_formatter(PercentFormatter(1))
-    plt.savefig("pmax_abs_er.png", dpi=400, facecolor='aliceblue', edgecolor='k', bbox_inches='tight')
+    plt.savefig("kmax_abs_er.png", dpi=400, facecolor='aliceblue', edgecolor='k', bbox_inches='tight')
     plt.close()
